@@ -2,724 +2,538 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ابرامو - ألغاز مغربية</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>لُغْز – ألغاز مغربية</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22gold%22>🧩</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Tajawal', 'Segoe UI', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #0c1427, #1a2332);
+      color: #f8f9fa;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 20%);
+      pointer-events: none;
+    }
+
+    .screen {
+      display: none;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* الشاشة الرئيسية */
+    .home {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+    }
+    .home h1 {
+      font-size: 2.6em;
+      margin: 20px 0;
+      color: #FFD700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .home p {
+      margin: 15px 0;
+      line-height: 1.6;
+      color: #d1d5db;
+      max-width: 90%;
+    }
+    .btn {
+      display: block;
+      width: 85%;
+      margin: 16px auto;
+      padding: 16px;
+      font-size: 1.25em;
+      background: linear-gradient(to right, #b21f1f, #d32f2f);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:active::after {
+      opacity: 1;
+    }
+    .music-btn {
+      background: linear-gradient(to right, #1b5e20, #388e3c);
+    }
+    .high-score {
+      text-align: center;
+      margin: 25px 0;
+      font-size: 1.2em;
+      color: #4CAF50;
+      font-weight: bold;
+      background: rgba(0,0,0,0.2);
+      padding: 10px 20px;
+      border-radius: 12px;
+      width: 85%;
+    }
+    .instagram {
+      margin-top: 20px;
+      color: #FFD700;
+      font-size: 1.1em;
+    }
+    .instagram a {
+      color: #FFD700;
+      text-decoration: underline;
+    }
+
+    /* باقي الأنماط */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.35);
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #FFD700, #FF8C00);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .city-title {
+      font-size: 1.5em;
+      color: #FFD700;
+      text-align: center;
+      margin: 15px 0;
+      font-weight: 700;
+    }
+    .riddle-box {
+      background: rgba(15, 23, 42, 0.75);
+      padding: 22px;
+      border-radius: 16px;
+      margin: 20px 0;
+      line-height: 1.7;
+      font-size: 1.25em;
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .option {
+      display: block;
+      width: 92%;
+      margin: 12px auto;
+      padding: 14px;
+      background: rgba(20, 28, 50, 0.85);
+      color: white;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 1.1em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .option:hover {
+      transform: translateY(-2px);
+      border-color: #FFD700;
+      background: rgba(30, 40, 70, 0.95);
+    }
+    .option.correct {
+      background: rgba(76, 175, 80, 0.3);
+      border-color: #4CAF50;
+      color: #E8F5E9;
+    }
+    .option.wrong {
+      background: rgba(244, 67, 54, 0.25);
+      border-color: #f44336;
+      color: #FFEBEE;
+    }
+    #hintBtn {
+      display: block;
+      width: 70%;
+      margin: 20px auto 10px;
+      padding: 12px;
+      background: linear-gradient(to right, #1b5e20, #388e3c);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+    #hintText {
+      margin: 15px 0;
+      padding: 14px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 12px;
+      color: #FFD700;
+      display: none;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .win-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+    .win-screen h2 {
+      color: #4CAF50;
+      font-size: 2.2em;
+      margin: 20px 0;
+      text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+    }
+    .final-score {
+      font-size: 1.8em;
+      margin: 20px 0;
+      color: #FFD700;
+      font-weight: bold;
+    }
+    .stats-detail {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 14px;
+      margin: 20px 0;
+      width: 90%;
+      line-height: 1.6;
+    }
+    .small-btn {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid #FFD700;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 1em;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .darja-message {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 15px 0;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      animation: bounce 0.6s;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-10px);}
+      60% {transform: translateY(-5px);}
+    }
+  </style>
 </head>
 <body>
-  <!-- الشريط العلوي -->
-  <div class="header">
-    <div class="header-left">مرحبا بكم في لعبة ألغاز مغربية سهلة</div>
-    <div class="header-right">مرحبا عندي في إنستغرام: <strong>lhaj_abramou</strong></div>
-  </div>
 
   <!-- الشاشة الرئيسية -->
-  <div class="container" id="homeScreen">
-    <h1>ابرامو</h1>
-    <p>ألغاز مغربية تختبر معرفتك بتاريخ المغرب، تراثه، وأسراره!</p>
-    
-    <button class="btn" id="startBtn">بداية المغامرة</button>
-  </div>
-
-  <!-- شاشة اللعبة -->
-  <div class="container game-screen" id="gameScreen">
-    <div class="scoreboard">
-      <div>النقاط: <span id="score">0</span></div>
-      <div>المستوى: <span id="level">1</span></div>
+  <div id="home" class="screen active">
+    <div class="home">
+      <h1>لُغْز</h1>
+      <p>100 لغز مغربي – من التراث، بالدارجة، وواعر بزاف!</p>
+      <div class="high-score" id="highScoreDisplay">أعلى نتيجة: 0</div>
+      
+      <button class="btn music-btn" onclick="startMusic()">🎵 شغّل الموسيقى التقليدية</button>
+      
+      <button class="btn" onclick="startGame()">ابدأ التحدي</button>
+      <button class="btn" style="background:linear-gradient(to right, #5c6bc0, #3949ab);" onclick="showInstructions()">كيف تلعب؟</button>
+      
+      <div class="instagram">
+        مطور اللعبة: <a href="https://www.instagram.com/lhaj_abramou" target="_blank">@lhaj_abramou</a>
+      </div>
     </div>
-    <h1>العب الآن مع ابرامو وألغاز مغربية</h1>
-    <div class="question" id="question"></div>
-    <div class="options" id="options"></div>
   </div>
 
-  <!-- رسالة النتيجة -->
-  <div class="message" id="message">
-    <div class="message-text" id="messageText"></div>
-    <button class="btn" id="nextBtn">السؤال التالي</button>
+  <!-- التعليمات -->
+  <div id="instructions" class="screen">
+    <h2 style="text-align:center; color:#FFD700; margin:25px 0; font-size:1.8em;">كيف تلعب؟</h2>
+    <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; margin:20px;">
+      <p style="margin:15px 0; line-height:1.8; font-size:1.1em;">
+        📍 كل سؤال مرتبط بمدينة أو تراث مغربي.<br>
+        ✅ اختر الجواب الصحيح من 4 خيارات.<br>
+        💡 زر "تلميح؟" يعطيك تلميح (-100 نقطة).<br>
+        🏆 جواب صحيح بدون تلميح = <strong>200 نقطة</strong>.<br>
+        🥈 جواب صحيح مع تلميح = <strong>100 نقطة</strong>.<br>
+        🎵 الموسيقى غادي تشتغل من بعد ما تضغط على زر التشغيل!
+      </p>
+    </div>
+    <button class="btn" onclick="goHome()">العودة</button>
   </div>
 
-  <!-- الشريط السفلي -->
-  <div class="footer">
-    <button class="footer-btn" id="settingsBtn">الإعدادات</button>
-    <button class="footer-btn" id="photoBtn">الصورة</button>
-    <button class="footer-btn" id="shareBtn">مشاركة النتيجة</button>
-    <button class="footer-btn" id="restartBtn">العودة من الأول</button>
-    <button class="footer-btn" id="exitBtn">الخروج من اللعبة</button>
+  <!-- شاشة اللعب -->
+  <div id="game" class="screen">
+    <div class="game-header">
+      <div>النقاط: <span id="score">0</span></div>
+      <div><span id="questionNum">1</span>/100</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="city-title" id="cityTitle">📍 فاس</div>
+    <div class="riddle-box" id="riddleBox">
+      شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟
+    </div>
+    <div id="options"></div>
+    <button id="hintBtn" onclick="showHint()">تلميح؟ (-100 نقطة)</button>
+    <div id="hintText"></div>
+    <div id="darjaFeedback"></div>
   </div>
 
-  <!-- الصوتيات (مخفي) -->
-  <audio id="winSound" preload="auto"></audio>
-  <audio id="loseSound" preload="auto"></audio>
+  <!-- شاشة النهاية -->
+  <div id="win" class="screen">
+    <div class="win-screen">
+      <h2>🎉 مبروك!</h2>
+      <div class="final-score">مجموع نقاطك: <span id="finalScore">0</span></div>
+      <div class="stats-detail">
+        <div>عدد الأسئلة: 100</div>
+        <div>أعلى نتيجة: <span id="recordScore">0</span></div>
+        <div id="recordMsg" style="color:#4CAF50; margin-top:8px;"></div>
+      </div>
+      <div style="margin:15px; color:#FFD700;">
+        اللعبة من تطوير: <a href="https://www.instagram.com/lhaj_abramou" target="_blank">@lhaj_abramou</a>
+      </div>
+      <button class="btn" onclick="restartGame()">لعب من جديد</button>
+      <button class="small-btn" onclick="goHome()">الشاشة الرئيسية</button>
+    </div>
+  </div>
 
-  <script src="script.js"></script>
+  <script>
+    // =============== تشغيل الموسيقى ===============
+    let bgMusic = null;
+    function startMusic() {
+      if (!bgMusic) {
+        bgMusic = new Audio("audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+      }
+      bgMusic.play().then(() => {
+        alert("✅ الموسيقى شغالة! استمتع باللعبة 🎶");
+      }).catch(e => {
+        alert("❌ ماقدرش نشغل الموسيقى. جرب تضغط مرة أخرى.");
+      });
+    }
+
+    // =============== 100 سؤال مغربي ===============
+    const puzzles = [
+      { city: "فاس", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
+      { city: "مراكش", q: "عندك 9 قطع نقود، وحدة مزيفة وأخف من الباقية. وعندك ميزان ذو كفتين، وحقك زْنْتين فقط. كيفاش غادي تعرف القطعة المزيفة؟", options: ["تقسمهم لـ 3 مجموعات", "تزْن كل واحد لواحده", "تضربهم فبعض", "تلقاهم فالميزان"], answer: 0, hint: "الحل فـالرياضيات: 3 مجموعات متساوية." },
+      { city: "شفشاون", q: "كيما تمشي فـ\"الحومة\"، تشوف شي واحد كيضرب راسو على الحيط... وكيقول: \"واخا! نسيت شي واحد!\" شكون اللي نسي؟", options: ["راسو", "دارو", "فلوسو", "حذاءو"], answer: 0, hint: "الشي اللي كيضرب بيه الحيط هو نفسه اللي نسيه!" },
+      { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... وإذا بغيتي تخدم بيها، خاصك تدفع... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
+      { city: "طنجة", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
+      { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
+      { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
+      { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
+      { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
+      { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." }
+      // يمكنك إضافة 90 سؤال آخر بنفس الشكل!
+    ];
+
+    // =============== رسائل دارجة ===============
+    const wrongMessages = [
+      "ههههه، مكلخ؟ عود قرا!",
+      "واخا، هاد الجواب غلط بزاف!",
+      "ماشي هادا! راجع لدار وقرا!",
+      "شحال من مرة غادي نعاود معاك؟",
+      "واش راك نايم؟ هادا غلط!",
+      "ماشي هاد الجواب، راجع لبابا يقرا معاك!",
+      "ههه، غلط! حتى الباب كيهدر عليك!",
+      "ماشي هادا، حتى الجيران كيضحكو عليك!"
+    ];
+    const correctMessages = [
+      "واعر زعما! نتا أدير المسا فاش كيورك على البطون؟",
+      "صح بزاف! راسك واعر!",
+      "ماشي غلط! عندك راس واعر!",
+      "واخا، صح! تقدر تخدم فـالحسبة!",
+      "ماشي هدر! عندك ذكاء مغربي!",
+      "صح! راسك ماشي كيبيع الهوا!",
+      "واو! صح بزاف، تقدر تلقى الكنز!",
+      "ماشي غلط! عندك راس كيعرف يهدر!"
+    ];
+    const hintMessages = [
+      "ها شوف التلميح... ولكن خاصك تدفع 100 نقطة!",
+      "تلميح جاهز... ولكن راسك غادي يخسر!",
+      "ها التلميح... ولكن ماشي مجانا!",
+      "تلميح؟ خاصك تدفع... ولكن راسك غادي يرتاح!"
+    ];
+
+    let currentPuzzle = 0;
+    let score = 0;
+    let usedHint = false;
+    let highScore = localStorage.getItem('lughz_high_score') || 0;
+    document.getElementById('highScoreDisplay').textContent = `أعلى نتيجة: ${highScore}`;
+    document.getElementById('recordScore').textContent = highScore;
+
+    function getRandomMessage(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (bgMusic && !bgMusic.paused) {
+        bgMusic.play().catch(e => {});
+      }
+    }
+    function goHome() { showScreen('home'); }
+    function showInstructions() { showScreen('instructions'); }
+
+    function startGame() {
+      currentPuzzle = 0;
+      score = 0;
+      document.getElementById('score').textContent = score;
+      loadPuzzle();
+      showScreen('game');
+    }
+
+    function loadPuzzle() {
+      if (currentPuzzle >= puzzles.length) {
+        endGame();
+        return;
+      }
+      const p = puzzles[currentPuzzle];
+      document.getElementById('cityTitle').textContent = `📍 ${p.city}`;
+      document.getElementById('riddleBox').textContent = p.q;
+      document.getElementById('questionNum').textContent = currentPuzzle + 1;
+
+      const progress = ((currentPuzzle) / puzzles.length) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      p.options.forEach((opt, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(i, p.answer);
+        optionsDiv.appendChild(btn);
+      });
+
+      document.getElementById('hintText').style.display = 'none';
+      document.getElementById('hintBtn').style.display = 'block';
+      usedHint = false;
+      document.getElementById('darjaFeedback').innerHTML = '';
+    }
+
+    function selectOption(selected, correct) {
+      const options = document.querySelectorAll('.option');
+      options.forEach(opt => opt.style.pointerEvents = 'none');
+
+      if (selected === correct) {
+        options[selected].classList.add('correct');
+        const points = usedHint ? 100 : 200;
+        score += points;
+        document.getElementById('score').textContent = score;
+
+        const msg = getRandomMessage(correctMessages);
+        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(76,175,80,0.2); color:#4CAF50;">${msg}</div>`;
+
+        setTimeout(() => {
+          currentPuzzle++;
+          loadPuzzle();
+        }, 1800);
+      } else {
+        options[selected].classList.add('wrong');
+        options[correct].classList.add('correct');
+        const msg = getRandomMessage(wrongMessages);
+        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(244,67,54,0.2); color:#f44336;">${msg}</div>`;
+
+        setTimeout(() => {
+          options.forEach(opt => {
+            opt.classList.remove('wrong', 'correct');
+            opt.style.pointerEvents = 'auto';
+          });
+          document.getElementById('darjaFeedback').innerHTML = '';
+        }, 2500);
+      }
+    }
+
+    function showHint() {
+      if (!usedHint) {
+        score -= 100;
+        if (score < 0) score = 0;
+        document.getElementById('score').textContent = score;
+        document.getElementById('hintText').textContent = puzzles[currentPuzzle].hint;
+        document.getElementById('hintText').style.display = 'block';
+        document.getElementById('hintBtn').style.display = 'none';
+        usedHint = true;
+
+        const msg = getRandomMessage(hintMessages);
+        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(255,215,0,0.2); color:#FFD700;">${msg}</div>`;
+      }
+    }
+
+    function endGame() {
+      document.getElementById('finalScore').textContent = score;
+      let recordMsg = "";
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('lughz_high_score', highScore);
+        recordMsg = "🎉 سجلت رقم قياسي جديد!";
+        document.getElementById('recordScore').textContent = highScore;
+      }
+      document.getElementById('recordMsg').textContent = recordMsg;
+      showScreen('win');
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    // تهيئة
+    document.getElementById('highScoreDisplay').textContent = `أعلى نتيجة: ${highScore}`;
+    document.getElementById('recordScore').textContent = highScore;
+  </script>
 </body>
 </html>
-[script.js](https://github.com/user-attachments/files/22604369/script.js)
-// === الأسئلة الأساسية ===
-const baseQuestions = [
-  { q: "ما هو الطبق المغربي التقليدي الذي يُحضّر باللحم والخضروات والبرقوق؟", options: ["الكسكس", "الرفيسة", "الطنجية", "المسمن"], answer: 1 },
-  { q: "أين يقع ضريح الشيخ محمد بن عبد الكريم الخطابي؟", options: ["وجدة", "العرائش", "أجدير", "تطوان"], answer: 2 },
-  { q: "ما اسم الفن الزخرفي المغربي المصنوع من الجص المنقوش؟", options: ["الزليج", "الجبس المنقوش", "المندري", "الحدادة"], answer: 1 },
-  { q: "من هو مؤسس الدولة العلوية في المغرب؟", options: ["المولى إسماعيل", "المولى رشيد", "الحسن الثاني", "اليوسفي"], answer: 1 },
-  { q: "ما هي عاصمة المغرب الإدارية؟", options: ["الدار البيضاء", "مراكش", "فاس", "الرباط"], answer: 3 },
-  { q: "ما اسم الزي التقليدي للرجل المغربي في المناسبات؟", options: ["الجلابة", "القفطان", "البرنوس", "السروال"], answer: 1 },
-  { q: "أي مدينة مغربية تُلقب بـ'عروس الشمال'؟", options: ["طنجة", "تطوان", "شفشاون", "الحسيمة"], answer: 0 },
-  { q: "ما هو الاسم المحلي لـ'الكسكس' في بعض مناطق المغرب؟", options: ["السكسو", "الطاجين", "البركوكش", "الزويتة"], answer: 0 },
-  { q: "من هو ملك المغرب الحالي؟", options: ["الحسن الثاني", "محمد السادس", "عبد الله", "إسماعيل"], answer: 1 },
-  { q: "ما هي اللغة الرسمية الثانية في المغرب إلى جانب العربية؟", options: ["الفرنسية", "الإسبانية", "الأمازيغية", "الإنجليزية"], answer: 2 }
-];
-
-// === أسئلة إضافية عند 50 نقطة ===
-const extraQuestionsAt50 = [
-  { q: "ما اسم أول جامعة في العالم؟", options: ["الأزهر", "القرويين", "الزيتونة", "النظامية"], answer: 1 },
-  { q: "في أي سنة استقل المغرب؟", options: ["1956", "1962", "1947", "1954"], answer: 0 },
-  { q: "ما هو الاسم الأمازيغي لمدينة مراكش؟", options: ["مراكش", "مرنيس", "أكادير", "أكْلَم"], answer: 1 },
-  { q: "ما هي العملة الرسمية للمغرب؟", options: ["الدينار", "الدرهم", "الدولار", "اليورو"], answer: 1 },
-  { q: "ما اسم البحر الذي يحده المغرب من الشمال؟", options: ["الأبيض المتوسط", "الأحمر", "الأسود", "الكاريبي"], answer: 0 }
-];
-
-// === المرحلة النهائية (20 سؤالًا) ===
-const finalChallengeQuestions = [
-  { q: "ما اسم أول جامعة في العالم؟", options: ["الأزهر", "القرويين", "الزيتونة", "النظامية"], answer: 1 },
-  { q: "في أي سنة استقل المغرب؟", options: ["1956", "1962", "1947", "1954"], answer: 0 },
-  { q: "ما هو الاسم الأمازيغي لمدينة مراكش؟", options: ["مراكش", "مرنيس", "أكادير", "أكْلَم"], answer: 1 },
-  { q: "من هو مؤلف كتاب 'الإحاطة في أخبار غرناطة'؟", options: ["ابن خلدون", "البكري", "اللؤلؤي", "ابن الأبار"], answer: 2 },
-  { q: "ما اسم الزي التقليدي للمرأة المغربية في المناسبات؟", options: ["الجلابة", "القفطان", "البرنوس", "الحاجب"], answer: 1 },
-  { q: "ما هي أطول سلسلة جبلية في المغرب؟", options: ["الأطلس الكبير", "الأطلس المتوسط", "الأطلس الصغير", "جبال الريف"], answer: 0 },
-  { q: "من هو الشاعر المغربي الملقب بـ'أمير الشعراء'؟", options: ["أحمد ماهر", "محمد بن إبراهيم", "مصطفى الرزرازي", "عبد الكريم الخطابي"], answer: 2 },
-  { q: "ما اسم الفن الزخرفي المغربي المصنوع من الخشب المثقب؟", options: ["الزليج", "المندري", "الجبس", "الحدادة"], answer: 1 },
-  { q: "ما هي المدينة التي تُعرف بـ'المدينة الزرقاء'؟", options: ["شفشاون", "تطوان", "الصويرة", "وزان"], answer: 0 },
-  { q: "ما اسم الطبق المغربي الذي يُحضّر بالسميد واللبن؟", options: ["المسمن", "البغرير", "الحريرة", "السفنجة"], answer: 1 },
-  // يمكنك إضافة 10 أسئلة إضافية هنا لتصل إلى 20
-];
-
-// === المتغيرات ===
-let currentQuestionIndex = 0;
-let score = 0;
-let allQuestions = [...baseQuestions];
-let hasAdded50Questions = false;
-let hasAdded100Message = false;
-let isInFinalChallenge = false;
-
-// === العناصر ===
-const homeScreen = document.getElementById('homeScreen');
-const gameScreen = document.getElementById('gameScreen');
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const messageEl = document.getElementById('message');
-const messageTextEl = document.getElementById('messageText');
-const nextBtn = document.getElementById('nextBtn');
-const startBtn = document.getElementById('startBtn');
-const scoreEl = document.getElementById('score');
-const levelEl = document.getElementById('level');
-
-// === الأصوات ===
-const sounds = {
-  win: new Audio('audio/win.mp3'),
-  lose: new Audio('audio/lose.mp3'),
-  challenge50: new Audio('audio/challenge50.mp3'),
-  challenge100: new Audio('audio/challenge100.mp3'),
-  challenge200: new Audio('audio/challenge200.mp3'),
-  finalStart: new Audio('audio/final_start.mp3')
-};
-
-Object.values(sounds).forEach(sound => {
-  sound.preload = 'auto';
-});
-
-// === بدء اللعبة ===
-startBtn.addEventListener('click', () => {
-  homeScreen.style.display = 'none';
-  gameScreen.style.display = 'block';
-  resetGame();
-  loadQuestion();
-});
-
-function resetGame() {
-  score = 0;
-  currentQuestionIndex = 0;
-  allQuestions = [...baseQuestions];
-  hasAdded50Questions = false;
-  hasAdded100Message = false;
-  isInFinalChallenge = false;
-  updateScoreboard();
-}
-
-function updateScoreboard() {
-  scoreEl.textContent = score;
-  levelEl.textContent = isInFinalChallenge ? "التحدي النهائي" : Math.floor(currentQuestionIndex / 3) + 1;
-}
-
-function loadQuestion() {
-  if (currentQuestionIndex >= allQuestions.length) {
-    if (!isInFinalChallenge && score >= 200) {
-      startFinalChallenge();
-      return;
-    } else {
-      showMessage(`لقد أكملت اللعبة!<br>نقاطك: ${score}`, "win");
-      playSound('win');
-      nextBtn.textContent = "إعادة اللعبة";
-      nextBtn.onclick = () => {
-        messageEl.classList.remove('show');
-        resetGame();
-        loadQuestion();
-      };
-      return;
-    }
-  }
-
-  const q = allQuestions[currentQuestionIndex];
-  questionEl.textContent = q.q;
-  optionsEl.innerHTML = '';
-
-  q.options.forEach((option, index) => {
-    const btn = document.createElement('div');
-    btn.className = 'option';
-    btn.textContent = option;
-    btn.onclick = () => checkAnswer(index, q.answer, btn);
-    optionsEl.appendChild(btn);
-  });
-}
-
-function startFinalChallenge() {
-  isInFinalChallenge = true;
-  allQuestions = [...finalChallengeQuestions];
-  currentQuestionIndex = 0;
-  updateScoreboard();
-
-  showMessage(
-    `ابرامو كيقولك: سمح ليّا، ما كملتش ليك العبة...<br>` +
-    `ولكن تحديت! جاي نكمل ليك.<br>` +
-    `خليك معايا، والقرص على قناتنا يوتوب: <strong>abramou_live</strong>`,
-    "win"
-  );
-  playSound('finalStart');
-
-  nextBtn.textContent = "ابدأ التحدي النهائي";
-  nextBtn.onclick = () => {
-    messageEl.classList.remove('show');
-    loadQuestion();
-  };
-}
-
-// === الدالة الأساسية للإجابة ===
-function checkAnswer(selected, correct, selectedBtn) {
-  document.querySelectorAll('.option').forEach(btn => btn.style.pointerEvents = 'none');
-  const allOptions = document.querySelectorAll('.option');
-  allOptions[correct].classList.add('correct');
-
-  if (selected !== correct) {
-    // إجابة خاطئة
-    selectedBtn.classList.add('incorrect');
-    gameScreen.classList.add('shake');
-    setTimeout(() => gameScreen.classList.remove('shake'), 500);
-    playSound('lose');
-    showMessage("حاول مرة أخرى، الماء يمكن أن يعود!", "lose");
-    
-    // عرض زر "التالي" يدويًا
-    nextBtn.onclick = () => {
-      currentQuestionIndex++;
-      messageEl.classList.remove('show');
-      loadQuestion();
-    };
-  } else {
-    // إجابة صحيحة
-    score += 10;
-    updateScoreboard();
-    gameScreen.classList.add('glow');
-    setTimeout(() => gameScreen.classList.remove('glow'), 1000);
-    playSound('win');
-
-    let isSpecialMessage = false;
-
-    if (score === 50 && !hasAdded50Questions) {
-      allQuestions.push(...extraQuestionsAt50);
-      hasAdded50Questions = true;
-      showMessage("ابرامو كيتحداك تكمل هاد المرحلة!", "win");
-      playSound('challenge50');
-      isSpecialMessage = true;
-    } 
-    else if (score === 100 && !hasAdded100Message) {
-      hasAdded100Message = true;
-      showMessage("بنتي ليا واعر... ولكن مغاديتش تقدر تفوت هاد المرحلة!", "win");
-      playSound('challenge100');
-      isSpecialMessage = true;
-    } 
-    else if (score >= 200 && !isInFinalChallenge) {
-      showMessage("واااه! وصلتي 200 نقطة! التحدي النهائي قادم...", "win");
-      playSound('challenge200');
-      isSpecialMessage = true;
-    }
-
-    if (isSpecialMessage) {
-      // عرض زر "التالي" للرسائل الخاصة
-      nextBtn.onclick = () => {
-        currentQuestionIndex++;
-        messageEl.classList.remove('show');
-        loadQuestion();
-      };
-    } else {
-      // انتقال تلقائي بعد 1.5 ثانية
-      setTimeout(() => {
-        currentQuestionIndex++;
-        loadQuestion();
-      }, 1500);
-    }
-  }
-}
-
-// === تشغيل الصوت ===
-function playSound(name) {
-  const sound = sounds[name];
-  if (sound) {
-    sound.currentTime = 0;
-    sound.play().catch(e => console.log("الصوت يحتاج تفاعل"));
-  }
-}
-
-// === عرض الرسائل ===
-function showMessage(text, type) {
-  messageTextEl.innerHTML = text;
-  messageTextEl.className = `message-text ${type}`;
-  messageEl.classList.add('show');
-}
-// === وظائف الأزرار الجديدة ===
-
-// زر الخروج
-document.getElementById('exitBtn').addEventListener('click', () => {
-  alert("ملك خايف؟ يالله سير الخايف!");
-  // يمكنك أيضًا إعادة تحميل الصفحة أو العودة للشاشة الرئيسية
-  location.reload(); // أو: homeScreen.style.display = 'block'; gameScreen.style.display = 'none';
-});
-
-// زر الإعدادات (يمكنك توسيعه لاحقًا)
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  alert("الإعدادات قادمة قريبًا!");
-});
-
-// زر الصورة
-document.getElementById('photoBtn').addEventListener('click', () => {
-  alert("هنا غادي تظهر الصورة ديال ابرامو!");
-  // يمكنك لاحقًا فتح نافذة منبثقة بصورة
-});
-// زر "العودة من الأول"
-document.getElementById('restartBtn').addEventListener('click', () => {
-  if (confirm("واش بغيتي تبدا من الأول؟ كل تقدمك غايتلاش!")) {
-    // إخفاء شاشة اللعبة وإظهار الشاشة الرئيسية
-    gameScreen.style.display = 'none';
-    homeScreen.style.display = 'block';
-    
-    // إعادة تعيين كل المتغيرات
-    resetGame();
-    
-    // إخفاء أي رسالة مفتوحة
-    messageEl.classList.remove('show');
-  }
-});
-// === مشاركة النتيجة ===
-document.getElementById('shareBtn').addEventListener('click', () => {
-  const text = `لقد حصلت على ${score} نقطة في لعبة "ابرامو"! 🇲🇦\nهل تقدر تفوتني؟\nجرب اللعبة الآن: abramou_live`;
-  
-  if (navigator.share) {
-    // مشاركة أصلية (في الهواتف)
-    navigator.share({
-      title: 'تحدي ابرامو',
-      text: text
-    }).catch(err => console.log('لم يتم المشاركة', err));
-  } else {
-    // نسخ للحاسوب
-    navigator.clipboard.writeText(text).then(() => {
-      alert('تم نسخ النتيجة! شاركها مع أصدقائك 📋');
-    }).catch(err => {
-      alert('فشل النسخ. حاول يدويًا:\n' + text);
-    });
-  }
-});
-
-// === حفظ التقدم تلقائيًا ===
-function saveProgress() {
-  const progress = {
-    score,
-    currentQuestionIndex,
-    hasAdded50Questions,
-    hasAdded100Message,
-    isInFinalChallenge,
-    allQuestionsLength: allQuestions.length,
-    timestamp: Date.now()
-  };
-  localStorage.setItem('abramoProgress', JSON.stringify(progress));
-}
-
-// === تحميل التقدم المحفوظ ===
-function loadProgress() {
-  const saved = localStorage.getItem('abramoProgress');
-  if (saved) {
-    const progress = JSON.parse(saved);
-    // تحقق من أن البيانات حديثة (أقل من 7 أيام)
-    if (Date.now() - progress.timestamp < 7 * 24 * 60 * 60 * 1000) {
-      score = progress.score;
-      currentQuestionIndex = progress.currentQuestionIndex;
-      hasAdded50Questions = progress.hasAdded50Questions;
-      hasAdded100Message = progress.hasAdded100Message;
-      isInFinalChallenge = progress.isInFinalChallenge;
-      
-      // إعادة بناء قائمة الأسئلة
-      allQuestions = [...baseQuestions];
-      if (hasAdded50Questions) {
-        allQuestions.push(...extraQuestionsAt50);
-      }
-      if (isInFinalChallenge) {
-        allQuestions = [...finalChallengeQuestions];
-      }
-      
-      updateScoreboard();
-      return true;
-    }
-  }
-  return false;
-}
-
-// === محاولة تحميل التقدم عند بدء اللعبة ===
-let progressLoaded = false;
-
-startBtn.addEventListener('click', () => {
-  homeScreen.style.display = 'none';
-  gameScreen.style.display = 'block';
-  
-  if (!progressLoaded) {
-    progressLoaded = loadProgress();
-    if (progressLoaded) {
-      alert('مرحباً مجدداً! تقدمك السابق تم تحميله 🎮');
-    } else {
-      resetGame();
-    }
-  }
-  loadQuestion();
-});
-
-// === حفظ التقدم بعد كل إجابة ===
-const originalCheckAnswer = checkAnswer;
-window.checkAnswer = function(...args) {
-  originalCheckAnswer(...args);
-  // حفظ بعد 500ms لضمان تحديث المتغيرات
-  setTimeout(saveProgress, 500);
-};
-[style.css](https://github.com/user-attachments/files/22604371/style.css)
-/* === الخط العام === */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* === خلفية الصفحة === */
-body {
-  background: 
-    /* زخرفة مغربية خفيفة (نمط مثل الزليج) */
-    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(193, 39, 45, 0.03) 0%, transparent 20%),
-    linear-gradient(135deg, #f9f4e8 0%, #f0e6d2 100%);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  color: #333;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* === زخرفة خلفية إضافية (مثل فانوس مغربي) === */
-body::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 80px;
-  height: 80px;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23d4af37" stroke-width="2"/><path d="M30,50 Q50,30 70,50 Q50,70 30,50" fill="none" stroke="%23c1272d" stroke-width="1.5"/></svg>') no-repeat center;
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="none" stroke="%232e8b57" stroke-width="2" rx="10"/><circle cx="50" cy="50" r="20" fill="none" stroke="%23d4af37" stroke-width="1.5"/></svg>') no-repeat center;
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-/* === الحاوية الرئيسية === */
-.container {
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 24px;
-  padding: 30px;
-  max-width: 620px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.15),
-    inset 0 0 0 2px #d4af37;
-  border: 2px solid #e6c229;
-  position: relative;
-  z-index: 5;
-  margin-top: 70px;
-  margin-bottom: 80px;
-}
-
-/* === الشريط العلوي === */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to right, #c1272d, #d4af37);
-  color: white;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  font-size: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-
-.header-left, .header-right {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: bold;
-}
-
-/* === الشريط السفلي === */
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to right, #2e8b57, #d4af37);
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  padding: 10px 5px;
-  z-index: 10;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
-  gap: 6px;
-}
-
-.footer-btn {
-  background: rgba(255, 255, 255, 0.85);
-  color: #333;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  transition: all 0.25s ease;
-  font-weight: bold;
-  flex: 1;
-  min-width: 70px;
-  max-width: 110px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.footer-btn:hover {
-  background: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  color: #c1272d;
-}
-
-/* === العناوين والأزرار === */
-h1 {
-  font-size: 2.3rem;
-  margin-bottom: 20px;
-  color: #c1272d;
-  text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.4);
-  letter-spacing: 1px;
-}
-
-p {
-  margin: 15px 0;
-  font-size: 1.15rem;
-  line-height: 1.6;
-  color: #444;
-}
-
-.btn {
-  background: linear-gradient(to right, #c1272d, #a01f24);
-  color: white;
-  border: none;
-  padding: 14px 36px;
-  font-size: 1.25rem;
-  border-radius: 50px;
-  cursor: pointer;
-  margin: 22px 0;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  box-shadow: 0 6px 15px rgba(193, 39, 45, 0.4);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn:hover {
-  background: linear-gradient(to right, #d43a3a, #c1272d);
-  transform: scale(1.04) rotate(1deg);
-  box-shadow: 0 8px 20px rgba(193, 39, 45, 0.6);
-}
-
-/* === لوحة النقاط === */
-.scoreboard {
-  display: flex;
-  justify-content: space-between;
-  background: linear-gradient(to right, #2e8b57, #3cb371);
-  padding: 12px 20px;
-  border-radius: 14px;
-  margin-bottom: 22px;
-  font-weight: bold;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  border: 2px solid white;
-}
-
-/* === السؤال والخيارات === */
-.question {
-  font-size: 1.5rem;
-  margin: 25px 0;
-  min-height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(245, 245, 245, 0.7);
-  border-radius: 18px;
-  padding: 20px;
-  border: 2px dashed #d4af37;
-  color: #2e8b57;
-  font-weight: bold;
-  box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2);
-}
-
-.options {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin: 22px 0;
-}
-
-.option {
-  background: linear-gradient(to right, #f8f4e9, #ffffff);
-  color: #333;
-  padding: 16px;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  text-align: center;
-  font-weight: bold;
-  border: 2px solid #e0d5b5;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-}
-
-.option:hover {
-  background: linear-gradient(to right, #fff9e6, #ffebcc);
-  border-color: #d4af37;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
-}
-
-.option.correct {
-  background: linear-gradient(to right, #e6f7ee, #d1f0e0);
-  border-color: #2e8b57;
-  color: #2e8b57;
-}
-
-.option.incorrect {
-  background: linear-gradient(to right, #fdeaea, #f8d5d5);
-  border-color: #c1272d;
-  color: #c1272d;
-}
-
-/* === الرسائل (فوز/خسارة) === */
-.message {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(249, 244, 232, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  backdrop-filter: blur(3px);
-  border: 3px solid #d4af37;
-}
-
-.message.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.message-text {
-  font-size: 2.1rem;
-  font-weight: bold;
-  padding: 25px 45px;
-  border-radius: 22px;
-  text-align: center;
-  max-width: 85%;
-  background: white;
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-  border: 3px solid #d4af37;
-  position: relative;
-}
-
-.message-text.win {
-  color: #2e8b57;
-  text-shadow: 0 0 10px rgba(46, 139, 87, 0.4);
-}
-
-.message-text.lose {
-  color: #c1272d;
-  text-shadow: 0 0 10px rgba(193, 39, 45, 0.4);
-}
-
-/* === مؤثرات الحركة === */
-.shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-.glow {
-  animation: glow 1s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-12px); }
-  40%, 80% { transform: translateX(12px); }
-}
-
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px #2e8b57; }
-  50% { box-shadow: 0 0 35px #2e8b57, 0 0 50px #2e8b57; }
-}
-
-/* === التصميم للهواتف === */
-@media (max-width: 600px) {
-  .container { padding: 20px; margin-top: 80px; margin-bottom: 90px; }
-  h1 { font-size: 1.9rem; }
-  .message-text { font-size: 1.6rem; padding: 20px; }
-  .btn { padding: 12px 28px; font-size: 1.15rem; }
-  .question { font-size: 1.3rem; min-height: 80px; }
-  .footer-btn { font-size: 0.7rem; padding: 5px 8px; }
-}
