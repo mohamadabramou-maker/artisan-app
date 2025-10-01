@@ -1,654 +1,1254 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>لُغْز – ألغاز مغربية</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22gold%22>🧩</text></svg>">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سوقنا — موقع البيع والشراء</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      font-family: 'Tajawal', 'Segoe UI', sans-serif;
-    }
-    body {
-      background: linear-gradient(135deg, #0c1427, #1a2332);
-      color: #f8f9fa;
-      min-height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.03) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 20%);
-      pointer-events: none;
+    :root {
+      --bg: #ffffff;
+      --text: #0b0b0b;
+      --muted: #6b7280;
+      --accent: #16a34a;
+      --accent-light: #dcf7e6;
+      --soft: #f3f6f4;
+      --card: #ffffff;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-strong: 0 10px 30px rgba(2,6,23,0.08);
+      --blue-bg: #4F6FFF;
+      --blue-light: #6A8BFF;
+      --border: rgba(0,0,0,0.08);
     }
 
-    .screen {
-      display: none;
-      padding: 20px;
-      max-width: 500px;
+    [data-theme="dark"] {
+      --bg: #111827;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --soft: #1f2937;
+      --card: #1e293b;
+      --border: rgba(255,255,255,0.1);
+      --shadow: 0 4px 20px rgba(0,0,0,0.2);
+      --shadow-strong: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    * { box-sizing: border-box; font-family: "Tajawal", system-ui, Arial; }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Header */
+    .header {
+      background: white;
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    [data-theme="dark"] .header { background: var(--card); }
+    .header-content {
+      max-width: 1200px;
       margin: 0 auto;
-      height: 100vh;
-      overflow-y: auto;
-      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    .screen.active {
-      display: block;
-      animation: fadeIn 0.4s ease;
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      text-decoration: none;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+    .search-bar {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 16px;
+      background: var(--soft);
+    }
+    .search-bar select {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--soft);
+      font-size: 16px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-header {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--soft);
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* الشاشة الرئيسية */
-    .home {
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 16px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      gap: 24px;
+    }
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+    .main-content {
+      flex: 1;
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .sidebar-card h3 {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      color: var(--text);
+    }
+    .category-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .category-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-list li:last-child {
+      border-bottom: none;
+    }
+    .category-list a {
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
       align-items: center;
-      height: 100%;
+      gap: 12px;
+    }
+    .category-list a:hover {
+      color: var(--accent);
+    }
+    .category-list i {
+      width: 24px;
       text-align: center;
+      color: var(--accent);
     }
-    .home h1 {
-      font-size: 2.6em;
-      margin: 20px 0;
-      color: #FFD700;
-      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
-      font-weight: 800;
-      letter-spacing: -0.5px;
+
+    /* Ad Listings */
+    .ads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
     }
-    .home p {
-      margin: 15px 0;
-      line-height: 1.6;
-      color: #d1d5db;
-      max-width: 90%;
+    .ad-card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .btn {
-      display: block;
-      width: 85%;
-      margin: 16px auto;
-      padding: 16px;
-      font-size: 1.25em;
-      background: linear-gradient(to right, #b21f1f, #d32f2f);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-      transition: all 0.2s;
-      position: relative;
+    .ad-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-strong);
+    }
+    .ad-image {
+      height: 200px;
       overflow: hidden;
     }
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(255,255,255,0.1);
-      opacity: 0;
-      transition: opacity 0.2s;
+    .ad-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-    .btn:active::after {
-      opacity: 1;
+    .ad-content {
+      padding: 16px;
     }
-    .music-btn {
-      background: linear-gradient(to right, #1b5e20, #388e3c);
+    .ad-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    .high-score {
-      text-align: center;
-      margin: 25px 0;
-      font-size: 1.2em;
-      color: #4CAF50;
-      font-weight: bold;
-      background: rgba(0,0,0,0.2);
-      padding: 10px 20px;
-      border-radius: 12px;
-      width: 85%;
+    .ad-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 0 0 8px 0;
     }
-    .instagram {
-      margin-top: 20px;
-      color: #FFD700;
-      font-size: 1.1em;
+    .ad-location {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 12px 0;
     }
-    .instagram a {
-      color: #FFD700;
-      text-decoration: underline;
-    }
-
-    /* شاشة اللعب */
-    .game-header {
+    .ad-meta {
       display: flex;
       justify-content: space-between;
-      background: rgba(0,0,0,0.35);
-      padding: 14px;
-      border-radius: 14px;
-      margin-bottom: 22px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-size: 12px;
+      color: var(--muted);
     }
-    .progress-bar {
-      height: 8px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px;
-      margin: 15px 0;
-      overflow: hidden;
+    .ad-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
     }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(to right, #FFD700, #FF8C00);
-      width: 0%;
-      transition: width 0.4s ease;
+    .ad-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    .city-title {
-      font-size: 1.5em;
-      color: #FFD700;
-      text-align: center;
-      margin: 15px 0;
-      font-weight: 700;
+    .ad-btn.chat {
+      border-color: var(--accent);
+      color: var(--accent);
     }
-    .riddle-box {
-      background: rgba(15, 23, 42, 0.75);
-      padding: 22px;
+
+    /* Add Ad Form */
+    .add-ad-form {
+      background: var(--card);
       border-radius: 16px;
-      margin: 20px 0;
-      line-height: 1.7;
-      font-size: 1.25em;
-      border: 1px solid rgba(255, 215, 0, 0.25);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
     }
-
-    /* === تعديل رئيسي: شبكة الخيارات 2x2 === */
-    #options-grid {
+    .form-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 20px 0;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
     }
-    .option {
-      padding: 14px;
-      background: rgba(20, 28, 50, 0.85);
-      color: white;
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      border-radius: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s;
-      font-size: 1.1em;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    .form-group {
+      margin-bottom: 16px;
     }
-    .option:hover {
-      transform: scale(1.03);
-      border-color: #FFD700;
-      background: rgba(30, 40, 70, 0.95);
-    }
-    .option.correct {
-      background: rgba(76, 175, 80, 0.3);
-      border-color: #4CAF50;
-      color: #E8F5E9;
-    }
-    .option.wrong {
-      background: rgba(244, 67, 54, 0.25);
-      border-color: #f44336;
-      color: #FFEBEE;
-    }
-
-    #hintBtn {
+    .form-group label {
       display: block;
-      width: 70%;
-      margin: 20px auto 10px;
-      padding: 12px;
-      background: linear-gradient(to right, #1b5e20, #388e3c);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-weight: 600;
     }
-    #hintText {
-      margin: 15px 0;
-      padding: 14px;
-      background: rgba(0,0,0,0.4);
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
       border-radius: 12px;
-      color: #FFD700;
-      display: none;
-      font-style: italic;
-      line-height: 1.6;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      background: var(--soft);
+      color: var(--text);
+    }
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .photos-preview {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .photo-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    /* شاشة النهاية */
-    .win-screen {
+    /* Chat */
+    .chat-container {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      height: 500px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+    }
+    .chat-header {
+      display: flex;
       align-items: center;
-      height: 100%;
-      text-align: center;
-      padding: 20px;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
     }
-    .win-screen h2 {
-      color: #4CAF50;
-      font-size: 2.2em;
-      margin: 20px 0;
-      text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+    .chat-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 20px;
     }
-    .final-score {
-      font-size: 1.8em;
-      margin: 20px 0;
-      color: #FFD700;
-      font-weight: bold;
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    .stats-detail {
-      background: rgba(0,0,0,0.3);
-      padding: 15px;
-      border-radius: 14px;
-      margin: 20px 0;
-      width: 90%;
-      line-height: 1.6;
+    .message {
+      max-width: 70%;
+      padding: 12px;
+      border-radius: 16px;
+      background: var(--soft);
+      word-wrap: break-word;
     }
-    .small-btn {
-      background: rgba(255,255,255,0.12);
-      color: white;
-      border: 1px solid #FFD700;
-      padding: 10px 20px;
+    .message.self {
+      background: var(--accent-light);
+      color: var(--accent);
+      align-self: flex-end;
+    }
+    .chat-input {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
       border-radius: 12px;
-      font-size: 1em;
-      margin-top: 15px;
+      border: 1px solid var(--border);
+      background: var(--soft);
+    }
+    .chat-input button {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .darja-message {
-      font-size: 1.3em;
-      font-weight: bold;
-      margin: 15px 0;
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      animation: bounce 0.6s;
+    /* Auth Modals */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
     }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-      40% {transform: translateY(-10px);}
-      60% {transform: translateY(-5px);}
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--text);
+    }
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .auth-form .form-group {
+      margin-bottom: 16px;
+    }
+    .auth-form .form-group label {
+      display: block;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .auth-form .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      background: var(--soft);
+      color: var(--text);
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .switch-form {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--muted);
+    }
+    .switch-form a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--card);
+      padding: 30px 0;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+    .footer-column h3 {
+      font-size: 18px;
+      margin: 0 0 20px 0;
+      color: var(--text);
+    }
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    .copyright {
+      text-align: center;
+      padding: 20px 0;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .header-content {
+        flex-wrap: wrap;
+      }
+      .search-bar {
+        width: 100%;
+        order: 3;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+        order: 2;
+      }
     }
   </style>
 </head>
-<body>
+<body data-theme="light">
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <a href="#" class="logo">سوقنا</a>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="ابحث عن منتجات، سيارات، عقارات...">
+          <select id="categoryFilter">
+            <option value="">جميع التصنيفات</option>
+            <option value="cars">سيارات</option>
+            <option value="real_estate">عقارات</option>
+            <option value="electronics">إلكترونيات</option>
+            <option value="furniture">أثاث</option>
+            <option value="jobs">وظائف</option>
+            <option value="other">أخرى</option>
+          </select>
+          <button id="searchBtn" class="btn-header">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div class="header-actions">
+          <button id="loginBtn" class="btn-header">
+            <i class="fas fa-user"></i> دخول
+          </button>
+          <button id="addAdBtn" class="btn-header">
+            <i class="fas fa-plus"></i> إضافة إعلان
+          </button>
+          <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
 
-  <!-- الشاشة الرئيسية -->
-  <div id="home" class="screen active">
-    <div class="home">
-      <h1>لُغْز</h1>
-      <p>100 لغز مغربي – من التراث، بالدارجة، وواعر بزاف!</p>
-      <div class="high-score" id="highScoreDisplay">أعلى نتيجة: 0</div>
-      
-      <button class="btn music-btn" onclick="startMusic()">🎵 شغّل الموسيقى التقليدية</button>
-      
-      <button class="btn" onclick="startGame()">ابدأ التحدي</button>
-      <button class="btn" style="background:linear-gradient(to right, #5c6bc0, #3949ab);" onclick="showInstructions()">كيف تلعب؟</button>
-      
-      <div class="instagram">
-        مطور اللعبة: <a href="https://www.instagram.com/lhaj_abramou" target="_blank">@lhaj_abramou</a>
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <h3>التصنيفات</h3>
+          <ul class="category-list">
+            <li><a href="#" data-category="cars"><i class="fas fa-car"></i> سيارات</a></li>
+            <li><a href="#" data-category="real_estate"><i class="fas fa-home"></i> عقارات</a></li>
+            <li><a href="#" data-category="electronics"><i class="fas fa-mobile-alt"></i> إلكترونيات</a></li>
+            <li><a href="#" data-category="furniture"><i class="fas fa-couch"></i> أثاث</a></li>
+            <li><a href="#" data-category="jobs"><i class="fas fa-briefcase"></i> وظائف</a></li>
+            <li><a href="#" data-category="other"><i class="fas fa-tags"></i> أخرى</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>الفلاتر</h3>
+          <div class="form-group">
+            <label>السعر من</label>
+            <input type="number" id="priceFrom" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>السعر إلى</label>
+            <input type="number" id="priceTo" placeholder="1000000">
+          </div>
+          <div class="form-group">
+            <label>المدينة</label>
+            <select id="cityFilter">
+              <option value="">جميع المدن</option>
+              <option value="casablanca">الدار البيضاء</option>
+              <option value="rabat">الرباط</option>
+              <option value="marrakech">مراكش</option>
+              <option value="fez">فاس</option>
+              <option value="tangier">طنجة</option>
+            </select>
+          </div>
+          <button id="applyFilters" class="btn-header" style="width:100%;margin-top:10px;">
+            تطبيق الفلاتر
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Add Ad Form (Hidden by default) -->
+        <div id="addAdForm" class="add-ad-form" style="display:none;">
+          <h2>إضافة إعلان جديد</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>العنوان</label>
+              <input type="text" id="adTitle" placeholder="مثال: سيارة رينو موديل 2020" required>
+            </div>
+            <div class="form-group">
+              <label>التصنيف</label>
+              <select id="adCategory" required>
+                <option value="">اختر التصنيف</option>
+                <option value="cars">سيارات</option>
+                <option value="real_estate">عقارات</option>
+                <option value="electronics">إلكترونيات</option>
+                <option value="furniture">أثاث</option>
+                <option value="jobs">وظائف</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>السعر (درهم)</label>
+              <input type="number" id="adPrice" placeholder="0" required>
+            </div>
+            <div class="form-group">
+              <label>المدينة</label>
+              <select id="adCity" required>
+                <option value="">اختر المدينة</option>
+                <option value="casablanca">الدار البيضاء</option>
+                <option value="rabat">الرباط</option>
+                <option value="marrakech">مراكش</option>
+                <option value="fez">فاس</option>
+                <option value="tangier">طنجة</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>الوصف</label>
+            <textarea id="adDescription" placeholder="وصف مفصل للمنتج..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>صور المنتج (اختر عدة صور)</label>
+            <input type="file" id="adPhotos" accept="image/*" multiple>
+            <div class="photos-preview" id="photosPreview"></div>
+          </div>
+          <button id="submitAd" class="btn-header" style="width:100%;">
+            <i class="fas fa-plus"></i> نشر الإعلان
+          </button>
+        </div>
+
+        <!-- Ads Listings -->
+        <div id="adsContainer" class="ads-grid">
+          <!-- سيتم ملؤه ديناميكيًا -->
+        </div>
+
+        <!-- Chat Section (Hidden by default) -->
+        <div id="chatSection" class="chat-container" style="display:none;">
+          <div class="chat-header">
+            <div class="chat-avatar">ع</div>
+            <div>
+              <div class="chat-name" id="chatName">عمر</div>
+              <div class="chat-status">متصل الآن</div>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <!-- سيتم ملؤه ديناميكيًا -->
+          </div>
+          <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="اكتب رسالتك...">
+            <button id="sendChat"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>سوقنا</h3>
+          <ul class="footer-links">
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">شروط الاستخدام</a></li>
+            <li><a href="#">سياسة الخصوصية</a></li>
+            <li><a href="#">اتصل بنا</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>التصنيفات</h3>
+          <ul class="footer-links">
+            <li><a href="#">سيارات</a></li>
+            <li><a href="#">عقارات</a></li>
+            <li><a href="#">إلكترونيات</a></li>
+            <li><a href="#">أثاث</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>الدعم</h3>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">مركز المساعدة</a></li>
+            <li><a href="#">إبلاغ عن إعلان</a></li>
+            <li><a href="#">نصائح الأمان</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2024 سوقنا. جميع الحقوق محفوظة.
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>تسجيل الدخول</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="loginEmail" placeholder="ex@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="auth-btn">تسجيل الدخول</button>
+          <div class="switch-form">
+            ليس لديك حساب؟ <a href="#" id="showRegister">سجل الآن</a>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
 
-  <!-- التعليمات -->
-  <div id="instructions" class="screen">
-    <h2 style="text-align:center; color:#FFD700; margin:25px 0; font-size:1.8em;">كيف تلعب؟</h2>
-    <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; margin:20px;">
-      <p style="margin:15px 0; line-height:1.8; font-size:1.1em;">
-        📍 كل سؤال مرتبط بمدينة أو تراث مغربي.<br>
-        ✅ اختر الجواب الصحيح من 4 خيارات.<br>
-        💡 زر "تلميح؟" يعطيك تلميح (-100 نقطة).<br>
-        🏆 جواب صحيح بدون تلميح = <strong>200 نقطة</strong>.<br>
-        🥈 جواب صحيح مع تلميح = <strong>100 نقطة</strong>.<br>
-        🎵 الموسيقى غادي تشتغل من بعد ما تضغط على زر التشغيل!
-      </p>
-    </div>
-    <button class="btn" onclick="goHome()">العودة</button>
-  </div>
-
-  <!-- شاشة اللعب -->
-  <div id="game" class="screen">
-    <div class="game-header">
-      <div>النقاط: <span id="score">0</span></div>
-      <div><span id="questionNum">1</span>/100</div>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="city-title" id="cityTitle">📍 فاس</div>
-    <div class="riddle-box" id="riddleBox">
-      شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟
-    </div>
-    
-    <!-- الخيارات في شبكة 2x2 -->
-    <div id="options-grid"></div>
-    
-    <button id="hintBtn" onclick="showHint()">تلميح؟ (-100 نقطة)</button>
-    <div id="hintText"></div>
-    <div id="darjaFeedback"></div>
-  </div>
-
-  <!-- شاشة النهاية -->
-  <div id="win" class="screen">
-    <div class="win-screen">
-      <h2>🎉 مبروك!</h2>
-      <div class="final-score">مجموع نقاطك: <span id="finalScore">0</span></div>
-      <div class="stats-detail">
-        <div>عدد الأسئلة: 100</div>
-        <div>أعلى نتيجة: <span id="recordScore">0</span></div>
-        <div id="recordMsg" style="color:#4CAF50; margin-top:8px;"></div>
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>إنشاء حساب</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form class="auth-form" id="registerForm">
+          <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input type="text" id="registerName" placeholder="أدخل اسمك الكامل" required>
+          </div>
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="registerEmail" placeholder="ex@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="registerPassword" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label>تأكيد كلمة المرور</label>
+            <input type="password" id="registerConfirmPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="auth-btn">إنشاء حساب</button>
+          <div class="switch-form">
+            لديك حساب؟ <a href="#" id="showLogin">سجل الدخول</a>
+          </div>
+        </form>
       </div>
-      <div style="margin:15px; color:#FFD700;">
-        اللعبة من تطوير: <a href="https://www.instagram.com/lhaj_abramou" target="_blank">@lhaj_abramou</a>
-      </div>
-      <button class="btn" onclick="restartGame()">لعب من جديد</button>
-      <button class="small-btn" onclick="goHome()">الشاشة الرئيسية</button>
     </div>
   </div>
 
   <script>
-    // =============== تشغيل الموسيقى ===============
-    let bgMusic = null;
-    function startMusic() {
-      if (!bgMusic) {
-        bgMusic = new Audio("audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
-        bgMusic.loop = true;
-        bgMusic.volume = 0.3;
-      }
-      bgMusic.play().then(() => {
-        alert("✅ الموسيقى شغالة! استمتع باللعبة 🎶");
-      }).catch(e => {
-        alert("❌ ماقدرش نشغل الموسيقى. جرب تضغط مرة أخرى.");
+    // =============== Theme Management ===============
+    const THEME_KEY = 'marketplace_theme';
+    
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem(THEME_KEY, theme);
+      updateThemeIcon();
+    }
+    
+    function getTheme() {
+      return localStorage.getItem(THEME_KEY) || 'light';
+    }
+    
+    function updateThemeIcon() {
+      const isDark = getTheme() === 'dark';
+      document.querySelector('#themeToggle i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const current = getTheme();
+      setTheme(current === 'light' ? 'dark' : 'light');
+    });
+    
+    // =============== Modal Management ===============
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+    
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal(modal.id);
+        }
       });
+    });
+    
+    // Close buttons
+    document.querySelectorAll('.close-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = btn.closest('.modal');
+        closeModal(modal.id);
+      });
+    });
+    
+    // Switch between login and register
+    document.getElementById('showRegister').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal('loginModal');
+      openModal('registerModal');
+    });
+    
+    document.getElementById('showLogin').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal('registerModal');
+      openModal('loginModal');
+    });
+    
+    // =============== Authentication ===============
+    const USER_KEY = 'marketplace_user';
+    
+    function saveUser(user) {
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
-
-    // =============== دالة خلط المصفوفة ===============
-    function shuffleArray(array) {
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-      return newArray;
-    }
-
-    // =============== 100 سؤال مغربي ===============
-const puzzles = [
-  { city: "فاس", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
-  { city: "مراكش", q: "عندك 9 قطع نقود، وحدة مزيفة وأخف من الباقية. وعندك ميزان ذو كفتين، وحقك زْنْتين فقط. كيفاش غادي تعرف القطعة المزيفة؟", options: ["تقسمهم لـ 3 مجموعات", "تزْن كل واحد لواحده", "تضربهم فبعض", "تلقاهم فالميزان"], answer: 0, hint: "الحل فـالرياضيات: 3 مجموعات متساوية." },
-  { city: "شفشاون", q: "كيما تمشي فـ\"الحومة\"، تشوف شي واحد كيضرب راسو على الحيط... وكيقول: \"واخا! نسيت شي واحد!\" شكون اللي نسي؟", options: ["راسو", "دارو", "فلوسو", "حذاءو"], answer: 0, hint: "الشي اللي كيضرب بيه الحيط هو نفسه اللي نسيه!" },
-  { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... وإذا بغيتي تخدم بيها، خاصك تدفع... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
-  { city: "طنجة", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "تطوان", q: "شي واحد كيكون فـالدار، ولكن كيخرج برا... شكونا؟", options: ["الدخان", "الباب", "النافذة", "الضوء"], answer: 0, hint: "شي حاجة كيطلع من المطبخ." },
-  { city: "تارودانت", q: "شي حاجة كتكون فـالسوق، ولكن ما كتشريهاش... شكونا؟", options: ["الوقت", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي ما كيتباعش، ولكن كيضيع." },
-  { city: "العيون", q: "شي واحد كيقول: \"أنا كمشي، ولكن ما كتنقلش\"... شكونا؟", options: ["الساعة", "الحصان", "السيارة", "الطائرة"], answer: 0, hint: "شي حاجة كتلقاها فـالحائط." },
-  { city: "الخميسات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحقل... شكونا؟", options: ["النملة", "الباب", "السقف", "الحائط"], answer: 0, hint: "حيوان صغير كيدوز فـالدار." },
-  { city: "بني ملال", q: "شي واحد كيطلع من الأرض، ويقدر يخليك تهدر... شكونا؟", options: ["الهاتف", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة كتصل بيها الناس." },
-  { city: "آسفي", q: "شي حاجة كتكون فـالبحر، ولكن كتاكلها فـالدار... شكونا؟", options: ["السمك", "المية", "الرمال", "الحصان"], answer: 0, hint: "أكلة تقليدية مغربية." },
-  { city: "الحسيمة", q: "شي واحد كيقول: \"أنا كخدم، ولكن ما كيهدرش\"... شكونا؟", options: ["الراديو", "الهاتف", "الباب", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "تازة", q: "شي حاجة كتكون فـالمسجد، ولكن كتلقاها فـالدار... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "خريبكة", q: "شي واحد كيطلع من الجبل، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "سطات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "فاس", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "مراكش", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحومة... شكونا؟", options: ["الضحك", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتسمعها من الجيران." },
-  { city: "شفشاون", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
-  { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
-  { city: "طنجة", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "تطوان", q: "شي واحد كيكون فـالدار، ولكن كيخرج برا... شكونا؟", options: ["الدخان", "الباب", "النافذة", "الضوء"], answer: 0, hint: "شي حاجة كيطلع من المطبخ." },
-  { city: "تارودانت", q: "شي حاجة كتكون فـالسوق، ولكن ما كتشريهاش... شكونا؟", options: ["الوقت", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي ما كيتباعش، ولكن كيضيع." },
-  { city: "العيون", q: "شي واحد كيقول: \"أنا كمشي، ولكن ما كتنقلش\"... شكونا؟", options: ["الساعة", "الحصان", "السيارة", "الطائرة"], answer: 0, hint: "شي حاجة كتلقاها فـالحائط." },
-  { city: "الخميسات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحقل... شكونا؟", options: ["النملة", "الباب", "السقف", "الحائط"], answer: 0, hint: "حيوان صغير كيدوز فـالدار." },
-  { city: "بني ملال", q: "شي واحد كيطلع من الأرض، ويقدر يخليك تهدر... شكونا؟", options: ["الهاتف", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة كتصل بيها الناس." },
-  { city: "آسفي", q: "شي حاجة كتكون فـالبحر، ولكن كتاكلها فـالدار... شكونا؟", options: ["السمك", "المية", "الرمال", "الحصان"], answer: 0, hint: "أكلة تقليدية مغربية." },
-  { city: "الحسيمة", q: "شي واحد كيقول: \"أنا كخدم، ولكن ما كيهدرش\"... شكونا؟", options: ["الراديو", "الهاتف", "الباب", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "تازة", q: "شي حاجة كتكون فـالمسجد، ولكن كتلقاها فـالدار... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "خريبكة", q: "شي واحد كيطلع من الجبل، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "سطات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "فاس", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "مراكش", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحومة... شكونا؟", options: ["الضحك", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتسمعها من الجيران." },
-  { city: "شفشاون", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
-  { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
-  { city: "طنجة", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "تطوان", q: "شي واحد كيكون فـالدار، ولكن كيخرج برا... شكونا؟", options: ["الدخان", "الباب", "النافذة", "الضوء"], answer: 0, hint: "شي حاجة كيطلع من المطبخ." },
-  { city: "تارودانت", q: "شي حاجة كتكون فـالسوق، ولكن ما كتشريهاش... شكونا؟", options: ["الوقت", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي ما كيتباعش، ولكن كيضيع." },
-  { city: "العيون", q: "شي واحد كيقول: \"أنا كمشي، ولكن ما كتنقلش\"... شكونا؟", options: ["الساعة", "الحصان", "السيارة", "الطائرة"], answer: 0, hint: "شي حاجة كتلقاها فـالحائط." },
-  { city: "الخميسات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحقل... شكونا؟", options: ["النملة", "الباب", "السقف", "الحائط"], answer: 0, hint: "حيوان صغير كيدوز فـالدار." },
-  { city: "بني ملال", q: "شي واحد كيطلع من الأرض، ويقدر يخليك تهدر... شكونا؟", options: ["الهاتف", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة كتصل بيها الناس." },
-  { city: "آسفي", q: "شي حاجة كتكون فـالبحر، ولكن كتاكلها فـالدار... شكونا؟", options: ["السمك", "المية", "الرمال", "الحصان"], answer: 0, hint: "أكلة تقليدية مغربية." },
-  { city: "الحسيمة", q: "شي واحد كيقول: \"أنا كخدم، ولكن ما كيهدرش\"... شكونا؟", options: ["الراديو", "الهاتف", "الباب", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "تازة", q: "شي حاجة كتكون فـالمسجد، ولكن كتلقاها فـالدار... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "خريبكة", q: "شي واحد كيطلع من الجبل، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "سطات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "فاس", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "مراكش", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحومة... شكونا؟", options: ["الضحك", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتسمعها من الجيران." },
-  { city: "شفشاون", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
-  { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
-  { city: "طنجة", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "تطوان", q: "شي واحد كيكون فـالدار، ولكن كيخرج برا... شكونا؟", options: ["الدخان", "الباب", "النافذة", "الضوء"], answer: 0, hint: "شي حاجة كيطلع من المطبخ." },
-  { city: "تارودانت", q: "شي حاجة كتكون فـالسوق، ولكن ما كتشريهاش... شكونا؟", options: ["الوقت", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي ما كيتباعش، ولكن كيضيع." },
-  { city: "العيون", q: "شي واحد كيقول: \"أنا كمشي، ولكن ما كتنقلش\"... شكونا؟", options: ["الساعة", "الحصان", "السيارة", "الطائرة"], answer: 0, hint: "شي حاجة كتلقاها فـالحائط." },
-  { city: "الخميسات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحقل... شكونا؟", options: ["النملة", "الباب", "السقف", "الحائط"], answer: 0, hint: "حيوان صغير كيدوز فـالدار." },
-  { city: "بني ملال", q: "شي واحد كيطلع من الأرض، ويقدر يخليك تهدر... شكونا؟", options: ["الهاتف", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة كتصل بيها الناس." },
-  { city: "آسفي", q: "شي حاجة كتكون فـالبحر، ولكن كتاكلها فـالدار... شكونا؟", options: ["السمك", "المية", "الرمال", "الحصان"], answer: 0, hint: "أكلة تقليدية مغربية." },
-  { city: "الحسيمة", q: "شي واحد كيقول: \"أنا كخدم، ولكن ما كيهدرش\"... شكونا؟", options: ["الراديو", "الهاتف", "الباب", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "تازة", q: "شي حاجة كتكون فـالمسجد، ولكن كتلقاها فـالدار... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "خريبكة", q: "شي واحد كيطلع من الجبل، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "سطات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "فاس", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "مراكش", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحومة... شكونا؟", options: ["الضحك", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتسمعها من الجيران." },
-  { city: "شفشاون", q: "شي واحد كيطلع من الدار، ما كيهدرش، ولكن كيخليك تهدر... شكونا؟", options: ["الباب", "الحائط", "النافذة", "السقف"], answer: 0, hint: "شي حاجة كتكون فـ\"الحوش\" وكيقرع عليها الناس." },
-  { city: "الصويرة", q: "شي حاجة كتلقاها فـ\"الدابا\"، ولكن ما كتشريهاش... شكونا؟", options: ["المية", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي حاجة ضرورية فـالدابا، ولكن ماشي للبيع." },
-  { city: "طنجة", q: "شي واحد كيقول: \"أنا ماشي شي واحد، ولكن أنا كتجمع بزاف!\" شكونا؟", options: ["السوق", "المسجد", "الدار", "الحومة"], answer: 0, hint: "مكان كيجمع ناس بزاف فـوقت واحد." },
-  { city: "الرباط", q: "شي حاجة كتكون فـ\"الدار\" و\"الحومة\" و\"المسجد\"... وكل واحد كيستخدمها، ولكن ما كيهدرش... شكونا؟", options: ["الباب", "السقف", "الحائط", "الدرج"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "أكادير", q: "شي واحد كيطلع من الرمال، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "وجدة", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." },
-  { city: "الدار البيضاء", q: "شي واحد كيقول: \"أنا كخدم للجميع، ولكن ما كيهدرش\"... شكونا؟", options: ["الباب", "الهاتف", "الراديو", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "مكناس", q: "شي حاجة كتلقاها فـالمسجد، ولكن ما كتشريهاش... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "تطوان", q: "شي واحد كيكون فـالدار، ولكن كيخرج برا... شكونا؟", options: ["الدخان", "الباب", "النافذة", "الضوء"], answer: 0, hint: "شي حاجة كيطلع من المطبخ." },
-  { city: "تارودانت", q: "شي حاجة كتكون فـالسوق، ولكن ما كتشريهاش... شكونا؟", options: ["الوقت", "الخبز", "الحليب", "الشاي"], answer: 0, hint: "شي ما كيتباعش، ولكن كيضيع." },
-  { city: "العيون", q: "شي واحد كيقول: \"أنا كمشي، ولكن ما كتنقلش\"... شكونا؟", options: ["الساعة", "الحصان", "السيارة", "الطائرة"], answer: 0, hint: "شي حاجة كتلقاها فـالحائط." },
-  { city: "الخميسات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالحقل... شكونا؟", options: ["النملة", "الباب", "السقف", "الحائط"], answer: 0, hint: "حيوان صغير كيدوز فـالدار." },
-  { city: "بني ملال", q: "شي واحد كيطلع من الأرض، ويقدر يخليك تهدر... شكونا؟", options: ["الهاتف", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة كتصل بيها الناس." },
-  { city: "آسفي", q: "شي حاجة كتكون فـالبحر، ولكن كتاكلها فـالدار... شكونا؟", options: ["السمك", "المية", "الرمال", "الحصان"], answer: 0, hint: "أكلة تقليدية مغربية." },
-  { city: "الحسيمة", q: "شي واحد كيقول: \"أنا كخدم، ولكن ما كيهدرش\"... شكونا؟", options: ["الراديو", "الهاتف", "الباب", "التلفاز"], answer: 0, hint: "شي حاجة كتفتح وتقفل." },
-  { city: "تازة", q: "شي حاجة كتكون فـالمسجد، ولكن كتلقاها فـالدار... شكونا؟", options: ["السجادة", "الحذاء", "الكتاب", "الساعة"], answer: 0, hint: "شي حاجة كتصلي عليها." },
-  { city: "خريبكة", q: "شي واحد كيطلع من الجبل، ويقدر يخليك تطير... شكونا؟", options: ["الريح", "النخيل", "السمك", "الحصان"], answer: 0, hint: "شي حاجة ما كتشافش، ولكن كتحس بيها." },
-  { city: "سطات", q: "شي حاجة كتكون فـالدار، ولكن كتلقاها فـالسوق... شكونا؟", options: ["الخبز", "الباب", "السقف", "الحائط"], answer: 0, hint: "شي حاجة كتاكلها كل يوم." }
-];
-
-    // =============== رسائل دارجة ===============
-    const wrongMessages = [
-      "ههههه، مكلخ؟ عود قرا!",
-      "واخا، هاد الجواب غلط بزاف!",
-      "ماشي هادا! راجع لدار وقرا!",
-      "شحال من مرة غادي نعاود معاك؟",
-      "واش راك نايم؟ هادا غلط!",
-      "ماشي هاد الجواب، راجع لبابا يقرا معاك!",
-      "ههه، غلط! حتى الباب كيهدر عليك!",
-      "ماشي هادا، حتى الجيران كيضحكو عليك!"
-    ];
-    const correctMessages = [
-      "واعر زعما! نتا أدير المسا فاش كيورك على البطون؟",
-      "صح بزاف! راسك واعر!",
-      "ماشي غلط! عندك راس واعر!",
-      "واخا، صح! تقدر تخدم فـالحسبة!",
-      "ماشي هدر! عندك ذكاء مغربي!",
-      "صح! راسك ماشي كيبيع الهوا!",
-      "واو! صح بزاف، تقدر تلقى الكنز!",
-      "ماشي غلط! عندك راس كيعرف يهدر!"
-    ];
-    const hintMessages = [
-      "ها شوف التلميح... ولكن خاصك تدفع 100 نقطة!",
-      "تلميح جاهز... ولكن راسك غادي يخسر!",
-      "ها التلميح... ولكن ماشي مجانا!",
-      "تلميح؟ خاصك تدفع... ولكن راسك غادي يرتاح!"
-    ];
-
-    let currentPuzzle = 0;
-    let score = 0;
-    let usedHint = false;
-    let highScore = localStorage.getItem('lughz_high_score') || 0;
-    let currentCorrectIndex = -1; // لتخزين موقع الجواب الصحيح بعد الخلط
-
-    document.getElementById('highScoreDisplay').textContent = `أعلى نتيجة: ${highScore}`;
-    document.getElementById('recordScore').textContent = highScore;
-
-    function getRandomMessage(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if (bgMusic && !bgMusic.paused) {
-        bgMusic.play().catch(e => {});
+    
+    function getCurrentUser() {
+      try {
+        return JSON.parse(localStorage.getItem(USER_KEY)) || null;
+      } catch (e) {
+        return null;
       }
     }
-    function goHome() { showScreen('home'); }
-    function showInstructions() { showScreen('instructions'); }
-
-    function startGame() {
-      currentPuzzle = 0;
-      score = 0;
-      document.getElementById('score').textContent = score;
-      loadPuzzle();
-      showScreen('game');
+    
+    function updateAuthUI() {
+      const user = getCurrentUser();
+      const loginBtn = document.getElementById('loginBtn');
+      if (user) {
+        loginBtn.innerHTML = `<i class="fas fa-user"></i> ${user.name}`;
+        loginBtn.onclick = null; // Remove login click handler
+      } else {
+        loginBtn.innerHTML = '<i class="fas fa-user"></i> دخول';
+        loginBtn.onclick = () => openModal('loginModal');
+      }
     }
-
-    function loadPuzzle() {
-      if (currentPuzzle >= puzzles.length) {
-        endGame();
+    
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      
+      if (!email || !password) {
+        alert('الرجاء ملء جميع الحقول');
         return;
       }
-      const p = puzzles[currentPuzzle];
-      document.getElementById('cityTitle').textContent = `📍 ${p.city}`;
-      document.getElementById('riddleBox').textContent = p.q;
-      document.getElementById('questionNum').textContent = currentPuzzle + 1;
-
-      const progress = ((currentPuzzle) / puzzles.length) * 100;
-      document.getElementById('progressFill').style.width = `${progress}%`;
-
-      // === خلط الخيارات ===
-      const shuffledOptions = shuffleArray([...p.options]);
-      currentCorrectIndex = shuffledOptions.indexOf(p.options[p.answer]);
-
-      const grid = document.getElementById('options-grid');
-      grid.innerHTML = '';
-      shuffledOptions.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.className = 'option';
-        btn.textContent = opt;
-        btn.onclick = () => selectOption(i);
-        grid.appendChild(btn);
+      
+      // In a real app, you would verify credentials with a server
+      // Here we simulate a successful login
+      const user = { id: Date.now(), name: email.split('@')[0], email };
+      saveUser(user);
+      updateAuthUI();
+      closeModal('loginModal');
+      alert('تم تسجيل الدخول بنجاح!');
+    });
+    
+    // Register form
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value.trim();
+      const confirmPassword = document.getElementById('registerConfirmPassword').value.trim();
+      
+      if (!name || !email || !password || !confirmPassword) {
+        alert('الرجاء ملء جميع الحقول');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        alert('كلمات المرور غير متطابقة');
+        return;
+      }
+      
+      const user = { id: Date.now(), name, email };
+      saveUser(user);
+      updateAuthUI();
+      closeModal('registerModal');
+      alert('تم إنشاء الحساب بنجاح!');
+    });
+    
+    // =============== Ad Management ===============
+    const ADS_KEY = 'marketplace_ads';
+    const CHATS_KEY = 'marketplace_chats';
+    
+    function saveAds(ads) {
+      localStorage.setItem(ADS_KEY, JSON.stringify(ads));
+    }
+    
+    function loadAds() {
+      try {
+        return JSON.parse(localStorage.getItem(ADS_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+    
+    function saveChats(chats) {
+      localStorage.setItem(CHATS_KEY, JSON.stringify(chats));
+    }
+    
+    function loadChats() {
+      try {
+        return JSON.parse(localStorage.getItem(CHATS_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+    
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+    
+    // Photo preview
+    document.getElementById('adPhotos').addEventListener('change', (e) => {
+      const preview = document.getElementById('photosPreview');
+      preview.innerHTML = '';
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const div = document.createElement('div');
+          div.className = 'photo-thumb';
+          div.innerHTML = `<img src="${event.target.result}" alt="صورة">`;
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
       });
-
-      document.getElementById('hintText').style.display = 'none';
-      document.getElementById('hintBtn').style.display = 'block';
-      usedHint = false;
-      document.getElementById('darjaFeedback').innerHTML = '';
-    }
-
-    function selectOption(selectedIndex) {
-      const options = document.querySelectorAll('.option');
-      options.forEach(opt => opt.style.pointerEvents = 'none');
-
-      if (selectedIndex === currentCorrectIndex) {
-        options[selectedIndex].classList.add('correct');
-        const points = usedHint ? 100 : 200;
-        score += points;
-        document.getElementById('score').textContent = score;
-
-        const msg = getRandomMessage(correctMessages);
-        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(76,175,80,0.2); color:#4CAF50;">${msg}</div>`;
-
-        setTimeout(() => {
-          currentPuzzle++;
-          loadPuzzle();
-        }, 1800);
-      } else {
-        options[selectedIndex].classList.add('wrong');
-        options[currentCorrectIndex].classList.add('correct');
-        const msg = getRandomMessage(wrongMessages);
-        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(244,67,54,0.2); color:#f44336;">${msg}</div>`;
-
-        setTimeout(() => {
-          options.forEach(opt => {
-            opt.classList.remove('wrong', 'correct');
-            opt.style.pointerEvents = 'auto';
-          });
-          document.getElementById('darjaFeedback').innerHTML = '';
-        }, 2500);
+    });
+    
+    // Submit ad
+    document.getElementById('submitAd').addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
+    
+    document.getElementById('submitAd').addEventListener('click', () => {
+      const title = document.getElementById('adTitle').value.trim();
+      const category = document.getElementById('adCategory').value;
+      const price = document.getElementById('adPrice').value;
+      const city = document.getElementById('adCity').value;
+      const description = document.getElementById('adDescription').value.trim();
+      
+      if (!title || !category || !price || !city || !description) {
+        alert('الرجاء ملء جميع الحقول');
+        return;
       }
-    }
-
-    function showHint() {
-      if (!usedHint) {
-        score -= 100;
-        if (score < 0) score = 0;
-        document.getElementById('score').textContent = score;
-        document.getElementById('hintText').textContent = puzzles[currentPuzzle].hint;
-        document.getElementById('hintText').style.display = 'block';
-        document.getElementById('hintBtn').style.display = 'none';
-        usedHint = true;
-
-        const msg = getRandomMessage(hintMessages);
-        document.getElementById('darjaFeedback').innerHTML = `<div class="darja-message" style="background:rgba(255,215,0,0.2); color:#FFD700;">${msg}</div>`;
+      
+      const user = getCurrentUser();
+      if (!user) {
+        alert('يجب تسجيل الدخول لإضافة إعلان');
+        openModal('loginModal');
+        return;
       }
+      
+      const ad = {
+        id: uid(),
+        title,
+        category,
+        price: parseFloat(price),
+        city,
+        description,
+        userId: user.id,
+        userName: user.name,
+        timestamp: new Date().toISOString(),
+        photos: [] // In a real app, you would upload photos
+      };
+      
+      const ads = loadAds();
+      ads.push(ad);
+      saveAds(ads);
+      
+      // Reset form
+      document.getElementById('adTitle').value = '';
+      document.getElementById('adCategory').value = '';
+      document.getElementById('adPrice').value = '';
+      document.getElementById('adCity').value = '';
+      document.getElementById('adDescription').value = '';
+      document.getElementById('adPhotos').value = '';
+      document.getElementById('photosPreview').innerHTML = '';
+      
+      document.getElementById('addAdForm').style.display = 'none';
+      loadAdsList();
+      alert('تم نشر الإعلان بنجاح!');
+    });
+    
+    // =============== Ad Display ===============
+    const CATEGORIES = {
+      cars: 'سيارات',
+      real_estate: 'عقارات',
+      electronics: 'إلكترونيات',
+      furniture: 'أثاث',
+      jobs: 'وظائف',
+      other: 'أخرى'
+    };
+    
+    const CITIES = {
+      casablanca: 'الدار البيضاء',
+      rabat: 'الرباط',
+      marrakech: 'مراكش',
+      fez: 'فاس',
+      tangier: 'طنجة'
+    };
+    
+    function renderAd(ad) {
+      const div = document.createElement('div');
+      div.className = 'ad-card';
+      const categoryText = CATEGORIES[ad.category] || ad.category;
+      const cityText = CITIES[ad.city] || ad.city;
+      
+      div.innerHTML = `
+        <div class="ad-image">
+          <img src="https://via.placeholder.com/300x200?text=${encodeURIComponent(ad.title)}" alt="${ad.title}">
+        </div>
+        <div class="ad-content">
+          <h3 class="ad-title">${ad.title}</h3>
+          <div class="ad-price">${ad.price.toLocaleString()} درهم</div>
+          <div class="ad-location">
+            <i class="fas fa-map-marker-alt"></i> ${cityText}
+          </div>
+          <div class="ad-meta">
+            <span>${categoryText}</span>
+            <span>${new Date(ad.timestamp).toLocaleDateString('ar-MA')}</span>
+          </div>
+          <div class="ad-actions">
+            <button class="ad-btn chat" onclick="openChat('${ad.userId}', '${ad.userName}')">
+              <i class="fas fa-comments"></i> دردشة
+            </button>
+            <button class="ad-btn">
+              <i class="fas fa-phone"></i> اتصال
+            </button>
+          </div>
+        </div>
+      `;
+      return div;
     }
-
-    function endGame() {
-      document.getElementById('finalScore').textContent = score;
-      let recordMsg = "";
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('lughz_high_score', highScore);
-        recordMsg = "🎉 سجلت رقم قياسي جديد!";
-        document.getElementById('recordScore').textContent = highScore;
+    
+    function loadAdsList(category = '', city = '', priceFrom = '', priceTo = '') {
+      const ads = loadAds();
+      const container = document.getElementById('adsContainer');
+      container.innerHTML = '';
+      
+      let filteredAds = ads;
+      
+      if (category) {
+        filteredAds = filteredAds.filter(ad => ad.category === category);
       }
-      document.getElementById('recordMsg').textContent = recordMsg;
-      showScreen('win');
+      
+      if (city) {
+        filteredAds = filteredAds.filter(ad => ad.city === city);
+      }
+      
+      if (priceFrom) {
+        filteredAds = filteredAds.filter(ad => ad.price >= parseFloat(priceFrom));
+      }
+      
+      if (priceTo) {
+        filteredAds = filteredAds.filter(ad => ad.price <= parseFloat(priceTo));
+      }
+      
+      if (filteredAds.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1;">لا توجد إعلانات تطابق معايير البحث</p>';
+        return;
+      }
+      
+      filteredAds.forEach(ad => {
+        container.appendChild(renderAd(ad));
+      });
     }
-
-    function restartGame() {
-      startGame();
+    
+    // =============== Search and Filters ===============
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const city = document.getElementById('cityFilter').value;
+      const priceFrom = document.getElementById('priceFrom').value;
+      const priceTo = document.getElementById('priceTo').value;
+      
+      const ads = loadAds();
+      const container = document.getElementById('adsContainer');
+      container.innerHTML = '';
+      
+      const filteredAds = ads.filter(ad => {
+        const matchesQuery = ad.title.toLowerCase().includes(query) || 
+                             ad.description.toLowerCase().includes(query);
+        const matchesCategory = !category || ad.category === category;
+        const matchesCity = !city || ad.city === city;
+        const matchesPriceFrom = !priceFrom || ad.price >= parseFloat(priceFrom);
+        const matchesPriceTo = !priceTo || ad.price <= parseFloat(priceTo);
+        
+        return matchesQuery && matchesCategory && matchesCity && matchesPriceFrom && matchesPriceTo;
+      });
+      
+      if (filteredAds.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1;">لا توجد إعلانات تطابق معايير البحث</p>';
+        return;
+      }
+      
+      filteredAds.forEach(ad => {
+        container.appendChild(renderAd(ad));
+      });
+    });
+    
+    document.getElementById('applyFilters').addEventListener('click', () => {
+      const category = document.getElementById('categoryFilter').value;
+      const city = document.getElementById('cityFilter').value;
+      const priceFrom = document.getElementById('priceFrom').value;
+      const priceTo = document.getElementById('priceTo').value;
+      loadAdsList(category, city, priceFrom, priceTo);
+    });
+    
+    // Category links
+    document.querySelectorAll('[data-category]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = link.getAttribute('data-category');
+        loadAdsList(category);
+      });
+    });
+    
+    // =============== Chat ===============
+    let currentChatId = null;
+    
+    function openChat(userId, userName) {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('يجب تسجيل الدخول للدردشة');
+        openModal('loginModal');
+        return;
+      }
+      
+      currentChatId = userId;
+      document.getElementById('chatName').textContent = userName;
+      document.getElementById('chatSection').style.display = 'flex';
+      document.getElementById('adsContainer').style.display = 'none';
+      document.getElementById('addAdForm').style.display = 'none';
+      
+      loadChatMessages();
     }
-
-    // تهيئة
-    document.getElementById('highScoreDisplay').textContent = `أعلى نتيجة: ${highScore}`;
-    document.getElementById('recordScore').textContent = highScore;
+    
+    function loadChatMessages() {
+      const chats = loadChats();
+      const messages = chats[currentChatId] || [];
+      const container = document.getElementById('chatMessages');
+      container.innerHTML = '';
+      
+      messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'message' + (msg.self ? ' self' : '');
+        div.textContent = msg.text;
+        container.appendChild(div);
+      });
+      
+      container.scrollTop = container.scrollHeight;
+    }
+    
+    document.getElementById('sendChat').addEventListener('click', () => {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || !currentChatId) return;
+      
+      const chats = loadChats();
+      if (!chats[currentChatId]) chats[currentChatId] = [];
+      
+      const user = getCurrentUser();
+      chats[currentChatId].push({
+        self: true,
+        text,
+        timestamp: new Date().toISOString()
+      });
+      
+      saveChats(chats);
+      loadChatMessages();
+      input.value = '';
+    });
+    
+    // =============== Navigation ===============
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        openModal('loginModal');
+      }
+    });
+    
+    document.getElementById('addAdBtn').addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        alert('يجب تسجيل الدخول لإضافة إعلان');
+        openModal('loginModal');
+        return;
+      }
+      
+      document.getElementById('chatSection').style.display = 'none';
+      document.getElementById('adsContainer').style.display = 'grid';
+      document.getElementById('addAdForm').style.display = 'block';
+    });
+    
+    // =============== Initialize ===============
+    setTheme(getTheme());
+    updateAuthUI();
+    loadAdsList();
+    
+    // Handle Enter key in search
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('searchBtn').click();
+      }
+    });
   </script>
 </body>
 </html>
